@@ -56,17 +56,34 @@ inline float gj_cos (float num) {
 	return result;
 }
 
-void gj_clearMem (void *mem, size_t size) {
+void gjMemcpy (void *dest, void *source, size_t size) {
+	void *result = memcpy(dest, source, size);
+	int x = 0;
+}
+
+void gjClearMem (void *mem, size_t size) {
 	memset(mem, 0, size);
 }
 
-int gj_strlen (char *str) {
+int gjStrlen (const char *str) {
 	int result = strlen(str);
 	return result;
 }
 
 void gjStrcpy (char *dest, char *source) {
 	strcpy(dest, source);
+}
+
+int gjStrcmp (const char *str1, const char *str2) {
+	return strcmp(str1, str2);
+}
+
+bool gjEqual (const char *str1, const char *str2) {
+	bool result = false;
+	if (gjStrcmp(str1, str2) == 0) {
+		result = true;
+	}
+	return result;
 }
 
 struct gjData {
@@ -106,11 +123,11 @@ char *gjPushMemStack (gjMemStack *memStack, size_t size, bool clear = false) {
 		char *result = memStack->mem + memStack->used;
 		memStack->used += size;
 		if (clear) {
-			gj_clearMem(result, size);
+			gjClearMem(result, size);
 		}
 		return result;
 	} else {
-		// printf("Ran out of memory %i/%i \n", memStack->used + size, memStack->size);
+		printf("Ran out of memory %lu/%lu \n", memStack->used + size, memStack->size);
 		assert(false);
 	}
 
