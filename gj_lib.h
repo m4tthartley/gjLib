@@ -21,7 +21,7 @@ typedef long long s64;
 
 #define bool int
 
-#define assert(expression) {if (!(expression)) { int *np = 0; *(np) = 0; }}
+#define assert(expression) {if (!(expression)) { volatile int *np = 0; *(np) = 0; }}
 #define null 0
 #define PI 3.14159265359f
 #define PI2 (3.14159265359f*2.0f)

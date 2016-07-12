@@ -4,6 +4,11 @@
 #include <intrin.h>
 #include <windows.h>
 
+void *gjGetVirtualMemory (size_t size) {
+	void *result = VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
+	return result;
+}
+
 gj_Mem_Stack gj_initMemStack (size_t size) {
 	gj_Mem_Stack memStack = {};
 

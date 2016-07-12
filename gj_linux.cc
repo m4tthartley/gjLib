@@ -5,8 +5,15 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <glob.h>
+#include <sys/mman.h>
+// #include <unistd.h>
 
 typedef int gjFile;
+
+void *gjGetVirtualMemory (size_t size) {
+	void *result = mmap(0, size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);
+	return result;
+}
 
 // Alloc memory and init mem stack
 gjMemStack gjInitMemStack (size_t size) {
@@ -70,6 +77,14 @@ gjFile gjCreateFile (const char *file) {
 	}
 
 	return fd;
+}
+
+void gjRead (gjFile file, size_t size, gjMemStack *memStack) {
+	void *fileMemory = gjPushMemStack(memStack, size);
+	size_t bytesRead = read(file, fileMemory, size);
+	if (bytesRead != size) {
+		assert(false);
+	}
 }
 
 void gjWrite (gjFile file, void *data, size_t size) {
