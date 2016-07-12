@@ -9,8 +9,8 @@ void *gjGetVirtualMemory (size_t size) {
 	return result;
 }
 
-gj_Mem_Stack gj_initMemStack (size_t size) {
-	gj_Mem_Stack memStack = {};
+gjMemStack gjInitMemStack (size_t size) {
+	gjMemStack memStack = {};
 
 	memStack.mem = (char*)VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
 	if (memStack.mem) {
@@ -28,8 +28,8 @@ void GetWin32ErrorString (char *str, int size) {
 				   MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), str, size, NULL);
 }
 
-gj_Data gj_readFile (char *file, gj_Mem_Stack *memStack) {
-	gj_Data data = {};
+gjData gjReadFile (char *file, gjMemStack *memStack) {
+	gjData data = {};
 
 	HANDLE handle = CreateFileA(file, GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, 0, 0);
 
@@ -37,7 +37,7 @@ gj_Data gj_readFile (char *file, gj_Mem_Stack *memStack) {
 		LARGE_INTEGER size64;
 		if (GetFileSizeEx(handle, &size64)) {
 			unsigned int size = (unsigned int)size64.QuadPart;
-			data.mem = gj_pushMemStack(memStack, size);
+			data.mem = gjPushMemStack(memStack, size);
 
 			if (data.mem) {
 				DWORD bytesRead;
@@ -62,7 +62,7 @@ gj_Data gj_readFile (char *file, gj_Mem_Stack *memStack) {
 	return data;
 }
 
-bool gj_writeFile (char *file, void *data, size_t size) {
+bool gjWriteFile (char *file, void *data, size_t size) {
 	bool result = false;
 	HANDLE handle = CreateFileA(file, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, 0, 0);
 	if (handle != INVALID_HANDLE_VALUE) {
